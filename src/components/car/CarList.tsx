@@ -1,51 +1,64 @@
-import { Car } from "@/lib/types";
-import { Card, CardProps, Heading, List, Paragraph } from "@digdir/designsystemet-react";
+import { Car } from '@/lib/types';
+import Link from 'next/link';
+import { Card, Heading, List, Paragraph } from '@digdir/designsystemet-react';
+import { useMemo } from 'react';
+import { useCarFilter } from './CarFilter';
 
 type CarListProps = {
   cars: Car[];
-}
+};
 
 export function CarList({ cars }: CarListProps) {
+  const { current: filters } = useCarFilter();
+  const filteredCars = useMemo(() => {
+    if (!cars) return [];
+
+    if (filters.length === 0) return cars;
+
+    return cars.filter((car: Car) =>
+      filters.some((filter) => filter.label === car['status']),
+    );
+  }, [cars, filters]);
+
   return (
-    <div>
-      <Heading level={2}>Car List</Heading>
-      <Paragraph>List of cars with their details.</Paragraph>
-      <Paragraph>Total cars: {cars.length}</Paragraph>
-      <Paragraph>Sorted by ID.</Paragraph>
-      <Paragraph>Click on a car to view more details.</Paragraph>
-      <List.Unordered style={{ listStyleType: 'none', padding: 0 }}>
-        {cars
-          .sort((a, b) => a.id - b.id)
-          .map((car) => {
-            return (
-              <List.Item key={car.id}>
-                <Card data-variant='tinted' data-color='brand3' asChild>
-                  <a href={`/car/${car.id}`}>
-                    <Heading level={3}>{car.regNr} - {car.status}</Heading>
-                    <Paragraph>{car.merke} {car.modell} ({car.årsmodell})</Paragraph>
-                  </a>
-                  {/* <p>Oppdrag: {car.oppdrag}</p> */}
-                </Card>
-              </List.Item>
-            );
-          })
-        }
-      </List.Unordered>
-    </div>
+    <List.Unordered style={{ listStyleType: 'none', padding: 0 }}>
+      {filteredCars.map((car) => {
+        return (
+          <List.Item key={car.id}>
+            <Card
+              data-variant='tinted'
+              data-color={getDataColorByStatus(car.status)}
+              asChild
+            >
+              <Link href={`/${car.id}`}>
+                <Heading level={3}>
+                  {car.id}: {car.regNr} - {car.status}
+                </Heading>
+                <Paragraph>
+                  {car.merke} {car.modell} ({car.årsmodell})
+                </Paragraph>
+              </Link>
+            </Card>
+          </List.Item>
+        );
+      })}
+    </List.Unordered>
   );
 }
 
-function getColorFromStatus(status: string): CardProps['data-color'] {
+function getDataColorByStatus(
+  status: string | undefined,
+): 'accent' | 'brand1' | 'brand2' | 'brand3' | 'neutral' | undefined {
   switch (status) {
-    case 'In use':
-      return 'brand1';
-    case 'Available':
-      return 'brand2';
-    case 'Maintenance':
+    case 'Tilgjengelig':
       return 'brand3';
-    case 'Out of service':
+    case 'På vei til hendelse':
+      return 'brand2';
+    case 'I oppdrag':
+      return 'brand1';
+    case 'Under vedlikehold':
       return 'accent';
     default:
-      return 'neutral';
+      return 'neutral'; // Default color for unknown status
   }
 }

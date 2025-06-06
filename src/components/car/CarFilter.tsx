@@ -1,10 +1,85 @@
-import { Heading, Paragraph } from "@digdir/designsystemet-react";
+import { useCars } from '@/api/client';
+import {
+  Badge,
+  Checkbox,
+  Fieldset,
+  Paragraph,
+  useCheckboxGroup,
+  ValidationMessage,
+} from '@digdir/designsystemet-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+
+type Choices = {
+  [key: string]: {
+    label: string;
+  };
+};
+
+export const statuses: Choices = {
+  available: {
+    label: 'Tilgjengelig',
+  },
+  enRouteToEvent: {
+    label: 'På vei til hendelse',
+  },
+  onMission: {
+    label: 'I oppdrag',
+  },
+  underMaintenance: {
+    label: 'Under vedlikehold',
+  },
+};
 
 export function CarFilter() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { current: filters } = useCarFilter();
+  const { data, isSuccess } = useCars();
+
+  const { getCheckboxProps, validationMessageProps } = useCheckboxGroup({
+    value: filters.map((filter) => filter.value), // Default selected values
+    onChange: (values) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      if (values.length > 0) {
+        newParams.set('statusFilters', values.join(',')); // Combine values into a single parameter
+      } else {
+        newParams.delete('statusFilters'); // Remove the parameter if no values are selected
+      }
+      router.push(`?${newParams.toString()}`);
+    },
+  });
   return (
-    <div>
-      <Heading level={2}>Car Filter</Heading>
-      <Paragraph>This is a placeholder for the car filter component.</Paragraph>
-    </div>
+    <>
+      <Fieldset>
+        <Fieldset.Legend>Status</Fieldset.Legend>
+        {Object.entries(statuses).map(([value, { label }]) => (
+          <Checkbox
+            key={value}
+            label={`${label} (${(isSuccess && data?.filter((car) => car.status === label).length) || 0})`}
+            {...getCheckboxProps(value)}
+          />
+        ))}
+        <ValidationMessage {...validationMessageProps} />
+      </Fieldset>
+    </>
   );
+}
+
+export function useCarFilter() {
+  const searchParams = useSearchParams();
+
+  const filters = useMemo(() => {
+    const statusFilters = searchParams.get('statusFilters');
+    return statusFilters
+      ? statusFilters.split(',').map((value) => ({
+          value,
+          label: statuses[value]?.label || 'Unknown Status',
+        }))
+      : [];
+  }, [searchParams]);
+
+  return {
+    current: filters,
+  };
 }

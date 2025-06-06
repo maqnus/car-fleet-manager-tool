@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import '@digdir/designsystemet-css/index.css';
 import '@digdir/designsystemet-theme'; // or custom theme CSS file
 import '@oddbird/popover-polyfill';
+import { ClientProvider } from './ClientProvider';
 
 export const metadata: Metadata = {
-  title: "Car Fleet Manager Tool",
-  description: "Caseoppgave for PIT",
+  title: 'Car Fleet Manager Tool',
+  description: 'Caseoppgave for PIT',
 };
 
 export default function RootLayout({
@@ -14,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='nb'>
       <body>
-        {children}
+        <ClientProvider>{children}</ClientProvider>
       </body>
     </html>
   );

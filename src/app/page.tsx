@@ -1,56 +1,45 @@
-'use client'
+'use client';
 
-import styles from "./page.module.css";
-import { Button } from '@digdir/designsystemet-react';
+import { useCars } from '@/api/client';
+import { CarFilter } from '@/components/car/CarFilter';
+import { CarList } from '@/components/car/CarList';
+import { Heading, Paragraph, Spinner } from '@digdir/designsystemet-react';
+// TODO: Add Persisted state management for query data
+// import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+// import { useState, useEffect } from 'react';
 
-import { QueryClient } from '@tanstack/react-query'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { FleetView } from "@/components/car/FleetView";
-import { useEffect, useState } from "react";
+export default function FleetView() {
+  // const [persister, setPersister] = useState<ReturnType<
+  //   typeof createSyncStoragePersister
+  // > | null>(null);
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
-    },
-  },
-})
+  const { data, isLoading, isSuccess } = useCars();
 
+  // useEffect(() => {
+  //   // Initialize the persister only on the client side
+  //   const syncStoragePersister = createSyncStoragePersister({
+  //     storage: window.localStorage,
+  //   });
+  //   setPersister(syncStoragePersister);
+  // }, []);
 
+  // if (!persister) {
+  //   // Optionally, render a loading state while the persister is being initialized
+  //   return <p>Loading...</p>;
+  // }
 
-export default function Home() {
-  const [persister, setPersister] = useState<ReturnType<typeof createSyncStoragePersister> | null>(null);
-
-  useEffect(() => {
-    // Initialize the persister only on the client side
-    const syncStoragePersister = createSyncStoragePersister({
-      storage: window.localStorage,
-    });
-    setPersister(syncStoragePersister);
-  }, []);
-
-  if (!persister) {
-    // Optionally, render a loading state while the persister is being initialized
-    return <p>Loading...</p>;
+  if (isLoading) {
+    return <Spinner data-size='lg' aria-label='Laster biler...' />;
   }
-
+  if (!isSuccess || !data || data.length === 0) {
+    return <Paragraph>No cars found.</Paragraph>;
+  }
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister: persister! }}
-    >
-      <div className={styles.page}>
-        <main className={styles.main}>
-          <FleetView />
-          <Button>Trykk på meg!</Button>
-        </main>
-        <footer>
-          test footer
-        </footer>
-      </div>
-      <ReactQueryDevtools initialIsOpen />
-    </PersistQueryClientProvider>
+    <div>
+      <Heading level={1}>Car Fleet</Heading>
+      <Paragraph>List of cars with their details.</Paragraph>
+      <CarFilter />
+      <CarList cars={data} />
+    </div>
   );
 }
