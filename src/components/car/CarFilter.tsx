@@ -1,9 +1,7 @@
 import { useCars } from '@/api/client';
 import {
-  Badge,
   Checkbox,
   Fieldset,
-  Paragraph,
   useCheckboxGroup,
   ValidationMessage,
 } from '@digdir/designsystemet-react';
@@ -30,6 +28,14 @@ export const statuses: Choices = {
     label: 'Under vedlikehold',
   },
 };
+
+export function getStatusLabel(key: string): string {
+  return statuses[key]?.label || 'Unknown Status';
+}
+
+export function getStatusKeyByLabel(label: string): string | undefined {
+  return Object.keys(statuses).find((key) => statuses[key].label === label);
+}
 
 export function CarFilter() {
   const router = useRouter();

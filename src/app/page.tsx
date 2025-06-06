@@ -13,7 +13,7 @@ export default function FleetView() {
   //   typeof createSyncStoragePersister
   // > | null>(null);
 
-  const { data, isLoading, isSuccess } = useCars();
+  const { data, isSuccess, isPending } = useCars();
 
   // useEffect(() => {
   //   // Initialize the persister only on the client side
@@ -28,7 +28,7 @@ export default function FleetView() {
   //   return <p>Loading...</p>;
   // }
 
-  if (isLoading) {
+  if (isPending) {
     return <Spinner data-size='lg' aria-label='Laster biler...' />;
   }
   if (!isSuccess || !data || data.length === 0) {
