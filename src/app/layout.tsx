@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import '@navikt/ds-css';
 import '@digdir/designsystemet-css/index.css';
-import '@digdir/designsystemet-theme'; // or custom theme CSS file
+import '@digdir/designsystemet-theme';
 import '@oddbird/popover-polyfill';
 import { ClientProvider } from './ClientProvider';
 

@@ -4,6 +4,7 @@ import { useCars } from '@/api/client';
 import { CarFilter } from '@/components/car/CarFilter';
 import { CarList } from '@/components/car/CarList';
 import { Heading, Paragraph, Spinner } from '@digdir/designsystemet-react';
+import { BodyLong, HGrid, HStack, Page, VStack } from '@navikt/ds-react';
 // TODO: Add Persisted state management for query data
 // import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 // import { useState, useEffect } from 'react';
@@ -35,11 +36,29 @@ export default function FleetView() {
     return <Paragraph>No cars found.</Paragraph>;
   }
   return (
-    <div>
-      <Heading level={1}>Car Fleet</Heading>
-      <Paragraph>List of cars with their details.</Paragraph>
-      <CarFilter />
-      <CarList cars={data} />
-    </div>
+    <Page>
+      <VStack gap='4' align='center'>
+        <VStack gap='2' align='center'>
+          <Heading level={1}>🚗 Bilflåte</Heading>
+          <BodyLong>
+            Systemet er hermetisk lukket og under full kontroll!
+          </BodyLong>
+        </VStack>
+        <Page.Block as='section' width='md' gutters>
+          <HStack gap='1'>
+            <VStack gap='2' align='center'>
+              <CarFilter />
+            </VStack>
+            <VStack gap='2' align='center'>
+              <HGrid>
+                <HStack gap='4'>
+                  <CarList cars={data} />
+                </HStack>
+              </HGrid>
+            </VStack>
+          </HStack>
+        </Page.Block>
+      </VStack>
+    </Page>
   );
 }
