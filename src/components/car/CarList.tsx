@@ -16,9 +16,13 @@ export function CarList({ cars }: CarListProps) {
     if (filters.length === 0) return cars;
 
     return cars.filter((car: Car) =>
-      filters.some((filter) => filter.label === car['status']),
+      filters.some((filter) => filter.label === car.status),
     );
   }, [cars, filters]);
+
+  if (filteredCars.length === 0) {
+    return <h3>Ingen biler funnet</h3>;
+  }
 
   return (
     <List.Unordered style={{ listStyleType: 'none', padding: 0 }}>
