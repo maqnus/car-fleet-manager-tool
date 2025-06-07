@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom';
+import * as matchers from 'vitest-axe/matchers';
+import { expect } from 'vitest';
 import { vi } from 'vitest';
+
+expect.extend(matchers);
 
 // Mock Next.js navigation hooks globally
 let mockSearchParams: Record<string, string> = {};

@@ -26,26 +26,28 @@ export function CarList({ cars }: CarListProps) {
 
   return (
     <List.Unordered style={{ listStyleType: 'none', padding: 0 }}>
-      {filteredCars.map((car) => {
-        return (
-          <List.Item key={car.id}>
-            <Card
-              data-variant='tinted'
-              data-color={getDataColorByStatus(car.status)}
-              asChild
-            >
-              <Link href={`/${car.id}`}>
-                <Heading level={3}>
-                  {car.id}: {car.regNr} - {car.status}
-                </Heading>
-                <Paragraph>
-                  {car.merke} {car.modell} ({car.årsmodell})
-                </Paragraph>
-              </Link>
-            </Card>
-          </List.Item>
-        );
-      })}
+      {filteredCars
+        .sort((a, b) => a.id - b.id)
+        .map((car) => {
+          return (
+            <List.Item key={car.id}>
+              <Card
+                data-variant='tinted'
+                data-color={getDataColorByStatus(car.status)}
+                asChild
+              >
+                <Link href={`/${car.id}`}>
+                  <Heading level={3}>
+                    {car.id}: {car.regNr} - {car.status}
+                  </Heading>
+                  <Paragraph>
+                    {car.merke} {car.modell} ({car.årsmodell})
+                  </Paragraph>
+                </Link>
+              </Card>
+            </List.Item>
+          );
+        })}
     </List.Unordered>
   );
 }

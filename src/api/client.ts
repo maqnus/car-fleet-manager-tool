@@ -23,7 +23,7 @@ export function useCars(id?: number) {
         if (!car) throw new Error('Requested car not found');
         return car;
       }
-      return result.data.sort((a, b) => a.id - b.id);
+      return result.data;
     },
   });
 }
