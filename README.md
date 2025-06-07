@@ -4,6 +4,10 @@ Dette prosjektet er satt opp for å administrere bilflåter. Koden er konfigurer
 
 Du kan se og teste resultatet her: [Car Fleet Manager Tool](https://car-fleet-manager-tool.vercel.app/)
 
+## Teknologi
+
+Dette er en Next.js-applikasjon som bruker [designsystemet.no](https://designsystemet.no) for komponenter og [aksel.nav.no](https://aksel.nav.no) for layout. Enhetstester er implementert med [Vitest](https://vitest.dev). Prosjektet benytter også [@tanstack/react-query](https://tanstack.com/query/latest) for effektiv håndtering av serverstate og caching.
+
 ## Kom i gang
 
 1. Klon dette repositoriet.
@@ -16,4 +20,4 @@ Deploy skjer automatisk til Vercel ved push til `main`. Ingen manuell handling e
 
 ## Planer
 
-Jeg satser på å få sett litt på dette i løpet av helga, og legge inn e2e-tester og enhetstester.
+Jeg planlegger å legge inn e2e-tester ved hjelp av [Playwright](https://playwright.dev).
