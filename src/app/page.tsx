@@ -4,7 +4,7 @@ import { useCars } from '@/api/client';
 import { CarFilter } from '@/components/car/CarFilter';
 import { CarList } from '@/components/car/CarList';
 import { Heading, Paragraph, Spinner } from '@digdir/designsystemet-react';
-import { BodyLong, HGrid, HStack, Page, VStack } from '@navikt/ds-react';
+import { HGrid, HStack, Page, VStack } from '@navikt/ds-react';
 // TODO: Add Persisted state management for query data
 // import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 // import { useState, useEffect } from 'react';
@@ -37,25 +37,30 @@ export default function FleetView() {
   }
   return (
     <Page>
-      <VStack gap='4' align='center'>
-        <VStack gap='2' align='center'>
-          <Heading level={1}>🚗 Bilflåte</Heading>
-          <BodyLong>
-            Systemet er hermetisk lukket og under full kontroll!
-          </BodyLong>
-        </VStack>
-        <Page.Block as='section' width='md' gutters>
-          <HStack gap='1'>
-            <VStack gap='2' align='center'>
-              <CarFilter />
-            </VStack>
-            <VStack gap='2' align='center'>
-              <HGrid>
-                <HStack gap='4'>
-                  <CarList cars={data} />
-                </HStack>
-              </HGrid>
-            </VStack>
+      <VStack gap='4'>
+        <Page.Block as='header' width='lg' gutters>
+          <Heading
+            level={1}
+            data-size='xl'
+            style={{
+              marginBottom: '0',
+            }}
+          >
+            🚗 Bilflåte
+          </Heading>
+          <Paragraph>
+            Her kan du se en oversikt over alle politibiler, deres status og
+            annen relevant informasjon.
+          </Paragraph>
+        </Page.Block>
+        <Page.Block as='main' width='lg' gutters>
+          <HStack gap='0'>
+            <CarFilter />
+            <HGrid>
+              <HStack gap='4'>
+                <CarList cars={data} />
+              </HStack>
+            </HGrid>
           </HStack>
         </Page.Block>
       </VStack>

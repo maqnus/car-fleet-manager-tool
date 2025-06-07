@@ -45,6 +45,9 @@ describe('CarList', () => {
     expect(getByText('2: XYZ789 - I oppdrag')).toBeInTheDocument();
     expect(getByText('Honda Civic (2019)')).toBeInTheDocument();
   });
+
+  // TODO: I suspect this test is not working as intended
+  // I think playwright is better suited for a11y testing
   it('rendered list of cars should have no violations', async () => {
     const { container } = render(<CarList cars={MOCK_CARS} />);
     expect(
@@ -78,6 +81,19 @@ describe('CarList', () => {
     expect(
       queryByText('3: DEF456 - Under vedlikehold'),
     ).not.toBeInTheDocument();
+  });
+
+  // TODO: I suspect this test is not working as intended
+  // I think playwright is better suited for a11y testing
+  it('rendered list of cars with active filter should have no violations', async () => {
+    const statusFilters = getStatusKeyByLabel('Tilgjengelig') ?? '';
+    setMockNavigation({ statusFilters }, '/cars');
+    const { container } = render(<CarList cars={MOCK_CARS} />);
+    expect(
+      await axe(container, {
+        runOnly: ['wcag2aaa', 'wcag21a', 'wcag21aa'],
+      }),
+    ).toHaveNoViolations();
   });
   it('should not render cars that do not match the filter', () => {
     const statusFilters = getStatusKeyByLabel('Tilgjengelig') ?? '';
